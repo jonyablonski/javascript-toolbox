@@ -1,7 +1,6 @@
-// Get current location's distance from the top of the page
-var position = window.pageYOffset;
-
-// Get an element's distance from the top of the page
+/*
+ * Get Element Distance from top of Window
+ */
 var getElemDistance = function ( elem ) {
     var location = 0;
     if (elem.offsetParent) {
@@ -11,6 +10,4 @@ var getElemDistance = function ( elem ) {
         } while (elem);
     }
     return location >= 0 ? location : 0;
-};
-var elem = document.querySelector('#some-element');
-var location = getElemDistance( elem );
+  };

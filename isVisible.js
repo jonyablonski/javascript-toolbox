@@ -4,6 +4,8 @@
  *
  * Description: Checks if a DOM element is truly visible.
  * Package URL: https://github.com/UseAllFive/true-visibility
+ *
+ * Usage: element.isVisible(element) // Returns true/false
  */
 Element.prototype.isVisible = function() {
  
