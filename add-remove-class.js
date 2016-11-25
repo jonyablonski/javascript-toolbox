@@ -2,7 +2,7 @@
  * Various ways to add/remove classes
  */
 
- // Select an element
+// Select an element
 var element = document.querySelector(".some-class");
 
 // Give class "foo" to the element
