@@ -10,4 +10,4 @@ var prefixedEventListener = function( element, type, callback ) {
 };
 
 // Usage
-// prefixedEvent(entry, "AnimationEnd", deleteElem);
+prefixedEvent(entry, "AnimationEnd", deleteElem);

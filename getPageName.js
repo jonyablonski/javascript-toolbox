@@ -1,0 +1,1 @@
+var pageName = window.location.pathname.substring(1).split(/[/.]+/g)[0];
