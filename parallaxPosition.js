@@ -1,5 +1,5 @@
 var transform = ['transform', 'msTransform', 'webkitTransform', 'mozTransform', 'oTransform'];
-var parallaxElem = document.querySelectorAll('.js-parallax');
+var parallaxElem = document.querySelectorAll('[data-parallax]');
 
 var getSupportedPropertyName = function(properties) {
 	for (var i = 0; i < properties.length; i++) {
@@ -22,12 +22,13 @@ window.requestAnimFrame = (function() {
 })();
 
 var parallax = function(elem, rate) {
-	elem.style[getSupportedPropertyName(transform)] = 'translate3d(0px,' + (wScrollCurrent / rate) + 'px, 0px)';
+	elem.style[getSupportedPropertyName(transform)] = 'translate3d(0px,' + Math.round(wScrollCurrent * rate) + 'px, 0px)';
 };
 
 var parallaxScroll = function() {
-	[].slice.call(parallaxElem).forEach(function(el,i){
-		parallax( parallaxElem, 3 );
+	forEach( parallaxElem, function ( value ) {
+		var speed = value.getAttribute('data-parallax');
+		parallax(value, speed);
 	});
 };
 
@@ -38,3 +39,7 @@ var scrollEventHandler = function() {
 };
 
 window.addEventListener( 'scroll', scrollEventHandler, false );
+
+
+// Usage
+<div class="elem" data-parallax=".5"></div>
