@@ -1,3 +1,7 @@
+/**
+ * Get the height of the `document` element
+ * @return {Number} The height
+ */
 var getDocumentHeight = function () {
     return Math.max(
         document.body.scrollHeight,

@@ -1,93 +1,56 @@
-var getParentsUntil = function (elem, parent, selector) {
+/**
+ * Get all of an element's parent elements up the DOM tree until a matching parent is found
+ * @param  {Node}   elem     The element
+ * @param  {String} parent   The selector for the parent to stop at
+ * @param  {String} selector The selector to filter against [optionals]
+ * @return {Array}           The parent elements
+ */
+var getParentsUntil = function ( elem, parent, selector ) {
 
+    // Element.matches() polyfill
+    if (!Element.prototype.matches) {
+        Element.prototype.matches =
+            Element.prototype.matchesSelector ||
+            Element.prototype.mozMatchesSelector ||
+            Element.prototype.msMatchesSelector ||
+            Element.prototype.oMatchesSelector ||
+            Element.prototype.webkitMatchesSelector ||
+            function(s) {
+                var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                    i = matches.length;
+                while (--i >= 0 && matches.item(i) !== this) {}
+                return i > -1;
+            };
+    }
+
+    // Setup parents array
     var parents = [];
-    if ( parent ) {
-        var parentType = parent.charAt(0);
-    }
-    if ( selector ) {
-        var selectorType = selector.charAt(0);
-    }
 
-    // Get matches
+    // Get matching parent elements
     for ( ; elem && elem !== document; elem = elem.parentNode ) {
 
-        // Check if parent has been reached
         if ( parent ) {
-
-            // If parent is a class
-            if ( parentType === '.' ) {
-                if ( elem.classList.contains( parent.substr(1) ) ) {
-                    break;
-                }
-            }
-
-            // If parent is an ID
-            if ( parentType === '#' ) {
-                if ( elem.id === parent.substr(1) ) {
-                    break;
-                }
-            }
-
-            // If parent is a data attribute
-            if ( parentType === '[' ) {
-                if ( elem.hasAttribute( parent.substr(1, parent.length - 1) ) ) {
-                    break;
-                }
-            }
-
-            // If parent is a tag
-            if ( elem.tagName.toLowerCase() === parent ) {
-                break;
-            }
-
+            if ( elem.matches( parent ) ) break;
         }
 
         if ( selector ) {
-
-            // If selector is a class
-            if ( selectorType === '.' ) {
-                if ( elem.classList.contains( selector.substr(1) ) ) {
-                    parents.push( elem );
-                }
-            }
-
-            // If selector is an ID
-            if ( selectorType === '#' ) {
-                if ( elem.id === selector.substr(1) ) {
-                    parents.push( elem );
-                }
-            }
-
-            // If selector is a data attribute
-            if ( selectorType === '[' ) {
-                if ( elem.hasAttribute( selector.substr(1, selector.length - 1) ) ) {
-                    parents.push( elem );
-                }
-            }
-
-            // If selector is a tag
-            if ( elem.tagName.toLowerCase() === selector ) {
+            if ( elem.matches( selector ) ) {
                 parents.push( elem );
             }
-
-        } else {
-            parents.push( elem );
+            break;
         }
 
+        parents.push( elem );
+
     }
 
-    // Return parents if any exist
-    if ( parents.length === 0 ) {
-        return null;
-    } else {
-        return parents;
-    }
+    return parents;
 
 };
 
 // Examples
-// var elem = document.querySelector('#some-element');
-// var parentsUntil = getParentsUntil(elem, '.some-class');
-// var parentsUntilByFilter = getParentsUntil(elem, '.some-class', '[data-something]');
-// var allParentsUntil = getParentsUntil(elem);
-// var allParentsExcludingElem = getParentsUntil(elem.parentNode);
+var elem = document.querySelector( '#some-element' );
+var parentsUntil = getParentsUntil( elem, '.some-class' );
+var parentsUntilByFilter = getParentsUntil( elem, '.some-class', '[data-something]' );
+var allParentsUntil = getParentsUntil( elem );
+var allParentsExcludingElem = getParentsUntil( elem.parentNode );

@@ -1,55 +1,48 @@
-var getParents = function (elem, selector) {
+/**
+ * Get all of an element's parent elements up the DOM tree
+ * @param  {Node}   elem     The element
+ * @param  {String} selector A class, ID, data attribute or tag to filter against [optional]
+ * @return {Array}           The parent elements
+ */
+var getParents = function ( elem, selector ) {
 
-    var parents = [];
-    if ( selector ) {
-        var firstChar = selector.charAt(0);
+    // Element.matches() polyfill
+    if (!Element.prototype.matches) {
+        Element.prototype.matches =
+            Element.prototype.matchesSelector ||
+            Element.prototype.mozMatchesSelector ||
+            Element.prototype.msMatchesSelector ||
+            Element.prototype.oMatchesSelector ||
+            Element.prototype.webkitMatchesSelector ||
+            function(s) {
+                var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                    i = matches.length;
+                while (--i >= 0 && matches.item(i) !== this) {}
+                return i > -1;
+            };
     }
 
-    // Get matches
+    // Setup parents array
+    var parents = [];
+
+    // Get matching parent elements
     for ( ; elem && elem !== document; elem = elem.parentNode ) {
+
+        // Add matching parents to array
         if ( selector ) {
-
-            // If selector is a class
-            if ( firstChar === '.' ) {
-                if ( elem.classList.contains( selector.substr(1) ) ) {
-                    parents.push( elem );
-                }
-            }
-
-            // If selector is an ID
-            if ( firstChar === '#' ) {
-                if ( elem.id === selector.substr(1) ) {
-                    parents.push( elem );
-                }
-            }
-
-            // If selector is a data attribute
-            if ( firstChar === '[' ) {
-                if ( elem.hasAttribute( selector.substr(1, selector.length - 1) ) ) {
-                    parents.push( elem );
-                }
-            }
-
-            // If selector is a tag
-            if ( elem.tagName.toLowerCase() === selector ) {
+            if ( elem.matches( selector ) ) {
                 parents.push( elem );
             }
-
         } else {
             parents.push( elem );
         }
 
     }
 
-    // Return parents if any exist
-    if ( parents.length === 0 ) {
-        return null;
-    } else {
-        return parents;
-    }
+    return parents;
 
 };
 
-var elem = document.querySelector('#some-element');
-var parents = getParents(elem, '.some-class');
-var allParents = getParents(elem.parentNode);
+var elem = document.querySelector( '#some-element' );
+var parents = getParents( elem, '.some-class' );
+var allParents = getParents( elem.parentNode );
